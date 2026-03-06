@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run Trivy
+      - name: Run Trivy (SARIF output)
         uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: fs
@@ -67,12 +67,20 @@ jobs:
           severity: CRITICAL,HIGH
           format: sarif
           output: trivy.sarif
-          exit-code: 1
+          exit-code: 0
       - name: Upload SARIF
         if: always()
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: trivy.sarif
+      - name: Fail on CRITICAL/HIGH vulns
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          format: table
+          exit-code: 1
 
   checkov:
     name: Checkov IaC Scan

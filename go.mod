@@ -1,6 +1,6 @@
 module github.com/nelssec/iam-advisor
 
-go 1.22
+go 1.26
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.27.0
