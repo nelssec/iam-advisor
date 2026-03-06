@@ -1,0 +1,79 @@
+# Build output
+iam-advisor
+*.exe
+*.out
+dist/
+
+# Go
+vendor/
+*.test
+*.prof
+coverage.out
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.Python
+
+# AI / Claude / LLM artifacts
+CLAUDE.md
+claude.md
+.claude/
+.claude_files
+*.claude
+AGENTS.md
+SOUL.md
+HEARTBEAT.md
+BOOTSTRAP.md
+IDENTITY.md
+TOOLS.md
+.aider*
+.cursor/
+.copilot/
+copilot-instructions.md
+.github/copilot-instructions.md
+openai_key*
+anthropic_key*
+
+# AWS credentials and config — never commit these
+.env
+.env.*
+*.env
+aws-credentials*
+credentials.json
+secrets.json
+*_credentials.json
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+config.local.*
+
+# Terraform / IaC secrets
+*.tfvars
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test output
+testdata/output/
