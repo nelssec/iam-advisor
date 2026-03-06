@@ -7,16 +7,14 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	awsconfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
 	"github.com/aws/aws-sdk-go-v2/service/organizations"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/nelssec/iam-advisor/internal/cloudtrail"
 	"github.com/nelssec/iam-advisor/internal/policy"
 	"github.com/spf13/cobra"
-
-	awsconfig "github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/aws"
 )
 
 var (
@@ -150,9 +148,9 @@ func assumeRoleConfig(ctx context.Context, baseCfg aws.Config, accountID, roleNa
 	stsClient := sts.NewFromConfig(baseCfg)
 	provider := stscreds.NewAssumeRoleProvider(stsClient, roleARN)
 
-	cfg, err := config.LoadDefaultConfig(ctx,
-		config.WithCredentialsProvider(provider),
-		config.WithRegion(baseCfg.Region),
+	cfg, err := awsconfig.LoadDefaultConfig(ctx,
+		awsconfig.WithCredentialsProvider(provider),
+		awsconfig.WithRegion(baseCfg.Region),
 	)
 	if err != nil {
 		return aws.Config{}, fmt.Errorf("loading config with assumed role %s: %w", roleARN, err)

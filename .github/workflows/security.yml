@@ -37,7 +37,7 @@ jobs:
           go install github.com/securego/gosec/v2/cmd/gosec@latest
           gosec -fmt sarif -out gosec.sarif ./... || true
       - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: gosec.sarif
 
@@ -59,28 +59,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run Trivy (SARIF output)
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          scan-type: fs
-          scan-ref: .
-          severity: CRITICAL,HIGH
-          format: sarif
-          output: trivy.sarif
-          exit-code: 0
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.58.1
+      - name: Run Trivy (SARIF)
+        run: |
+          trivy fs . \
+            --severity CRITICAL,HIGH \
+            --format sarif \
+            --output trivy.sarif \
+            --exit-code 0
       - name: Upload SARIF
         if: always()
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy.sarif
       - name: Fail on CRITICAL/HIGH vulns
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          scan-type: fs
-          scan-ref: .
-          severity: CRITICAL,HIGH
-          format: table
-          exit-code: 1
+        run: |
+          trivy fs . \
+            --severity CRITICAL,HIGH \
+            --format table \
+            --exit-code 1
 
   checkov:
     name: Checkov IaC Scan
@@ -97,6 +96,6 @@ jobs:
           soft_fail: false
       - name: Upload SARIF
         if: always()
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: checkov.sarif
